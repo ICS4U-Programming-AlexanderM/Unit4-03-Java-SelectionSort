@@ -70,7 +70,7 @@ public final class SelectionSort {
             // Close writer.
             output.close();
         } catch (IOException err) {
-            System.err.println("Error: " + err.getMessage());
+            System.err.println(error + err.getMessage());
         }
     }
 
@@ -109,8 +109,9 @@ public final class SelectionSort {
     * @return file contents as an array separated by newlines.
     */
     public static String[] getInput() {
-        // Declare list.
+        // Declare list and array.
         final ArrayList<String> inputList = new ArrayList<String>();
+        String[] inputArr = new String[0];
 
         try {
             // Choose a file to get input from.
@@ -124,16 +125,16 @@ public final class SelectionSort {
             }
 
             // Create an array with all elements in the input list.
-            final String[] inputArr = new String[inputList.size()];
+            inputArr = new String[inputList.size()];
             for (int location = 0; location < inputArr.length; location++) {
                 inputArr[location] = inputList.get(location);
             }
-            return inputArr;
         } catch (IOException err) {
             // For when no input file is found.
-            System.err.println("Error: " + err.getMessage());
+            System.err.println("An error occurred: " + err.getMessage());
             System.exit(0);
-            return(null);
+        } finally {
+            return inputArr;
         }
     }
 }
