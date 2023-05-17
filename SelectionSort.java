@@ -31,8 +31,7 @@ public final class SelectionSort {
     * @param args Unused
     */
     public static void main(String[] args) {
-        // Declare list and variable.
-        final ArrayList<String> inputList = new ArrayList<String>();
+        // Declare variables.
         String sortStr = "";
 
         // String variables because the style check is being pedantic.
@@ -40,55 +39,38 @@ public final class SelectionSort {
         final String error = "Error: ";
         final String newLine = "\n";
 
-        try {
-            // Choose a file to get input from.
-            final File input = new File("input.txt");
-            final Scanner scanInput = new Scanner(input);
+        // Get input from file.
+        final String[] inputArr = getInput();
 
+        // Loop to send each array to function.
+        for (int counter = 0; counter < inputArr.length; counter++) {
+            try {
+                // Convert inputArr to int.
+                final int size = inputArr[counter].split(sp).length;
+                final int[] arrInt = new int[size];
+                for (int location = 0; location < size; location++) {
+                    arrInt[location] = Integer.parseInt(
+                        inputArr[counter].split(sp)[location]);
+                }
+
+                // Call function.
+                final int[] sorted = sort(arrInt);
+                sortStr = sortStr + Arrays.toString(sorted) + newLine;
+            } catch (NumberFormatException err) {
+                sortStr = sortStr + error + err.getMessage() + newLine;
+            }
+        }
+
+        try {
             // Choose (or create) a file to print output to.
             final FileWriter output = new FileWriter("output.txt");
-
-            // Loop to read each line of input file.
-            while (scanInput.hasNextLine()) {
-                // Add the next line.
-                inputList.add(scanInput.nextLine());
-            }
-
-            // Create an array with all elements in the input list.
-            final String[] inputArr = new String[inputList.size()];
-            for (int location = 0; location < inputArr.length; location++) {
-                inputArr[location] = inputList.get(location);
-            }
-
-            // Loop to send each array to function.
-            for (int counter = 0; counter < inputArr.length; counter++) {
-                try {
-                    // Convert inputArr to int.
-                    final int size = inputArr[counter].split(sp).length;
-                    final int[] arrInt = new int[size];
-                    for (int location = 0; location < size; location++) {
-                        arrInt[location] = Integer.parseInt(
-                            inputArr[counter].split(sp)[location]);
-                    }
-
-                    // Call function.
-                    final int[] sorted = sort(arrInt);
-                    sortStr = sortStr + Arrays.toString(sorted) + newLine;
-                } catch (NumberFormatException err) {
-                    sortStr = sortStr + error + err.getMessage() + newLine;
-                }
-            }
-
-            // Write to output file.
             output.write(sortStr);
             System.out.println(sortStr);
 
             // Close writer.
             output.close();
-
         } catch (IOException err) {
-            // For when no input file is found.
-            System.err.println(error + err.getMessage());
+            System.err.println("Error: " + err.getMessage());
         }
     }
 
@@ -119,5 +101,39 @@ public final class SelectionSort {
             }
         }
         return listOfNum;
+    }
+
+    /**
+    * This function gets input from a file.
+    *
+    * @return file contents as an array separated by newlines.
+    */
+    public static String[] getInput() {
+        // Declare list.
+        final ArrayList<String> inputList = new ArrayList<String>();
+
+        try {
+            // Choose a file to get input from.
+            final File input = new File("input.txt");
+            final Scanner scanInput = new Scanner(input);
+
+            // Loop to read each line of input file.
+            while (scanInput.hasNextLine()) {
+                // Add the next line.
+                inputList.add(scanInput.nextLine());
+            }
+
+            // Create an array with all elements in the input list.
+            final String[] inputArr = new String[inputList.size()];
+            for (int location = 0; location < inputArr.length; location++) {
+                inputArr[location] = inputList.get(location);
+            }
+            return inputArr;
+        } catch (IOException err) {
+            // For when no input file is found.
+            System.err.println("Error: " + err.getMessage());
+            System.exit(0);
+            return(null);
+        }
     }
 }
